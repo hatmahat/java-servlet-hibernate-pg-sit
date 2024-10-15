@@ -6,6 +6,7 @@ import com.example.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.constants.AppConstants;
+import com.example.exception.UserNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public Double calculationDiscount(Long id, double purchaseAmount) {
         User user = userRepo.getUserById(id);
         if (user == null) {
-            return null;
+            throw new UserNotFoundException("User with ID " + id + " not found");
         }
 
         if (user.getMembershipStatus().equals(AppConstants.VIP_MEMBERSHIP)) {

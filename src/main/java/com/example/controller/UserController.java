@@ -36,14 +36,8 @@ public class UserController {
     @GetMapping("/discount")
     public String calculateDiscount(@RequestParam Long id, @RequestParam double purchaseAmount) {
         Double discount = userService.calculationDiscount(id, purchaseAmount);
-
-        if (discount == null) {
-            return "User not found";
-        }
-
         double discountPercentage = discount * 100;
         return "User gets a discount of " + discountPercentage + "% on a purchase of $" + purchaseAmount;
     }
-    
     
 }

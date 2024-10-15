@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.constants.AppConstants;
+import com.example.exception.UserNotFoundException;
 import com.example.model.User;
 import com.example.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
@@ -103,19 +105,24 @@ public class UserControllerTest {
         assertEquals("User gets a discount of 20.0% on a purchase of $150.0", response);
     }
 
-    // Test case: User not found
+    // Test case: calculateDiscount should return 404 if user not found
     @Test
     public void testCalculateDiscount_UserNotFound() {
         Long userId = 99L;
         double purchaseAmount = 150.0;
 
-        // Mock the service to return null for a non-existent user
-        when(userService.calculationDiscount(userId, purchaseAmount)).thenReturn(null);
+        // Mock the service to throw UserNotFoundException
+        when(userService.calculationDiscount(userId, purchaseAmount)).thenThrow(new UserNotFoundException("User with ID " + userId + " not found"));
 
-        // Call the controller method
-        String response = userController.calculateDiscount(userId, purchaseAmount);
+        // Call the controller method and expect UserNotFoundException to be thrown
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userController.calculateDiscount(userId, purchaseAmount);
+        });
 
-        // Verify the response
-        assertEquals("User not found", response);
+        // Verify the response is the exception message
+        assertEquals("User with ID 99 not found", exception.getMessage());
+
+        // Verify that the service method was called
+        verify(userService).calculationDiscount(userId, purchaseAmount);
     }
 }

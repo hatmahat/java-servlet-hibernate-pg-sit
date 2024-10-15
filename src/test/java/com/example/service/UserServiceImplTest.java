@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.constants.AppConstants;
+import com.example.exception.UserNotFoundException;
 import com.example.model.User;
 import com.example.repository.UserRepo;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -125,7 +127,7 @@ public class UserServiceImplTest {
         
         double purchaseAmount = 150.0;
  
-        // Mock the DAO to return the user
+        // Mock the repo to return the user
         when(userRepo.getUserById(userId)).thenReturn(user);
  
         // Call the service method
@@ -135,19 +137,21 @@ public class UserServiceImplTest {
         assertEquals(AppConstants.VIP_DISCOUNT_OVER_100, discount);
      }
 
-    // Test case: User not found
-    @Test 
+   // Test case: calculationDiscount throws UserNotFoundException if user not found
+    @Test
     public void testCalculateDiscount_UserNotFound() {
         Long userId = 99L;
         double purchaseAmount = 150.0;
 
-        // Mock the DAO to return null for non-existent user 
+        // Mock the repo to return null (user not found)
         when(userRepo.getUserById(userId)).thenReturn(null);
 
-        // Call the service method
-        Double discount = userService.calculationDiscount(userId, purchaseAmount);
+        // Call the service method and expect UserNotFoundException
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.calculationDiscount(userId, purchaseAmount);
+        });
 
-        // Assert that the discount is null (user not found)
-        assertNull(discount);
+        // Verify the exception message
+        assertEquals("User with ID 99 not found", exception.getMessage());
     }
 }
