@@ -1,8 +1,9 @@
 package com.example.service;
 
 import com.example.constants.AppConstants;
-import com.example.dao.UserDao;
 import com.example.model.User;
+import com.example.repository.UserRepo;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Mock
-    private UserDao userDao;
+    private UserRepo userRepo;
 
     @BeforeEach
     public void setup() {
@@ -46,8 +47,8 @@ public class UserServiceImplTest {
         mockUsers.add(user1);
         mockUsers.add(user2);
 
-        // Mocking the behavior of userDao
-        when(userDao.listUsers()).thenReturn(mockUsers);
+        // Mocking the behavior of userRepo
+        when(userRepo.listUsers()).thenReturn(mockUsers);
 
         // Test the method
         List<User> result = userService.getAllUsers();
@@ -61,8 +62,8 @@ public class UserServiceImplTest {
     public void testGetAllUsers_withEmptyList() {
         List<User> mockUsers = new ArrayList<>();
 
-        // Mocking the behavior of userDao
-        when(userDao.listUsers()).thenReturn(mockUsers);
+        // Mocking the behavior of userRepo
+        when(userRepo.listUsers()).thenReturn(mockUsers);
 
         // Test the method
         List<User> result = userService.getAllUsers();
@@ -76,14 +77,14 @@ public class UserServiceImplTest {
         String email = "john@example.com";
 
         // Simulate successful saving of a user
-        doNothing().when(userDao).saveUser(any(User.class));
+        doNothing().when(userRepo).saveUser(any(User.class));
 
         // Test the method
         userService.addUser(name, email, AppConstants.NO_MEMBERSHIP);
 
-        // Verify that userDao.saveUser() was called
+        // Verify that userRepo.saveUser() was called
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userDao).saveUser(userCaptor.capture());
+        verify(userRepo).saveUser(userCaptor.capture());
         User capturedUser = userCaptor.getValue();
 
         assertEquals("John Doe", capturedUser.getName());
@@ -97,7 +98,7 @@ public class UserServiceImplTest {
         String email = "john@example.com";
 
         // Simulate exception during saveUser
-        doThrow(new RuntimeException("Database error")).when(userDao).saveUser(any(User.class));
+        doThrow(new RuntimeException("Database error")).when(userRepo).saveUser(any(User.class));
 
         try {
             // Test the method
@@ -107,7 +108,7 @@ public class UserServiceImplTest {
         }
 
         // Verify that saveUser() was attempted
-        verify(userDao).saveUser(any(User.class));
+        verify(userRepo).saveUser(any(User.class));
     }
 
      // Test case: Calculate discount for VIP member, purchase over $100
@@ -125,7 +126,7 @@ public class UserServiceImplTest {
         double purchaseAmount = 150.0;
  
         // Mock the DAO to return the user
-        when(userDao.getUserById(userId)).thenReturn(user);
+        when(userRepo.getUserById(userId)).thenReturn(user);
  
         // Call the service method
         double discount = userService.calculationDiscount(userId, purchaseAmount);
@@ -141,7 +142,7 @@ public class UserServiceImplTest {
         double purchaseAmount = 150.0;
 
         // Mock the DAO to return null for non-existent user 
-        when(userDao.getUserById(userId)).thenReturn(null);
+        when(userRepo.getUserById(userId)).thenReturn(null);
 
         // Call the service method
         Double discount = userService.calculationDiscount(userId, purchaseAmount);

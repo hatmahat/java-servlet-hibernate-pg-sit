@@ -1,7 +1,8 @@
 package com.example.service;
 
-import com.example.dao.UserDao;
 import com.example.model.User;
+import com.example.repository.UserRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.constants.AppConstants;
@@ -13,11 +14,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     
     @Autowired
-    private UserDao userDao; 
+    private UserRepo userRepo; 
 
     @Override
     public List<User> getAllUsers() {
-        return userDao.listUsers();
+        return userRepo.listUsers();
     }
 
     @Override
@@ -32,12 +33,12 @@ public class UserServiceImpl implements UserService {
             user.setMembershipStatus(AppConstants.NO_MEMBERSHIP);
         }
 
-        userDao.saveUser(user);
+        userRepo.saveUser(user);
     }
 
     @Override
     public Double calculationDiscount(Long id, double purchaseAmount) {
-        User user = userDao.getUserById(id);
+        User user = userRepo.getUserById(id);
         if (user == null) {
             return null;
         }
