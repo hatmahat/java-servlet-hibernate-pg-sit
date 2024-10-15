@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.constants.AppConstants;
 import com.example.model.User;
 import com.example.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,12 +67,12 @@ public class UserControllerTest {
         String name = "John Doe";
         String email = "john@example.com";
 
-        doNothing().when(userService).addUser(name, email);
+        doNothing().when(userService).addUser(name, email, AppConstants.NO_MEMBERSHIP);
 
-        String response = userController.saveUser(name, email);
+        String response = userController.saveUser(name, email, AppConstants.NO_MEMBERSHIP);
         assertEquals("User added successfully!", response);
 
-        verify(userService).addUser(name, email);
+        verify(userService).addUser(name, email, AppConstants.NO_MEMBERSHIP);
     }
 
     // Scenario 4: Test POST /addUser with invalid inputs (e.g., empty name or email)
@@ -80,9 +81,41 @@ public class UserControllerTest {
         String name = "";
         String email = "";
 
-        doNothing().when(userService).addUser(name, email);
+        doNothing().when(userService).addUser(name, email, AppConstants.NO_MEMBERSHIP);
 
-        String response = userController.saveUser(name, email);
+        String response = userController.saveUser(name, email, AppConstants.NO_MEMBERSHIP);
         assertEquals("Invalid name or email", response);
+    }
+
+    // Test case: Calculate discount for VIP member
+    @Test
+    public void testCalculateDiscount_VIP() {
+        Long userId = 1L;
+        double purchaseAmount = 150.0;
+
+        // Mock the service to return a 20% discount
+        when(userService.calculationDiscount(userId, purchaseAmount)).thenReturn(AppConstants.VIP_DISCOUNT_OVER_100);
+
+        // Call the controller method
+        String response = userController.calculateDiscount(userId, purchaseAmount);
+
+        // Verify the response
+        assertEquals("User gets a discount of 20.0% on a purchase of $150.0", response);
+    }
+
+    // Test case: User not found
+    @Test
+    public void testCalculateDiscount_UserNotFound() {
+        Long userId = 99L;
+        double purchaseAmount = 150.0;
+
+        // Mock the service to return null for a non-existent user
+        when(userService.calculationDiscount(userId, purchaseAmount)).thenReturn(null);
+
+        // Call the controller method
+        String response = userController.calculateDiscount(userId, purchaseAmount);
+
+        // Verify the response
+        assertEquals("User not found", response);
     }
 }

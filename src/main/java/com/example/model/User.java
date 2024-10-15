@@ -9,11 +9,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "membership_status", nullable = false)
+    private String membershipStatus; // VIP, REGULAR, NONE
+
+    // Default constructor
+    public User() {}
 
     // Getters and setters 
     public Long getId() {
@@ -38,5 +44,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getMembershipStatus() {
+        return membershipStatus;
+    }
+
+    public void setMembershipStatus(String membershipStatus) {
+        this.membershipStatus = membershipStatus;
     }
 }

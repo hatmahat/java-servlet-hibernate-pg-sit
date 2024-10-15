@@ -5,5 +5,6 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAllUsers();
-    void addUser(String name, String email);
+    void addUser(String name, String email, String type);
+    Double calculationDiscount(Long id, double purchaseAmount);
 } 

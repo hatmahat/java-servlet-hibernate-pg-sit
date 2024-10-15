@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.constants.AppConstants;
 import com.example.dao.UserDao;
 import com.example.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import org.mockito.ArgumentCaptor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class UserServiceImplTest {
@@ -76,7 +79,7 @@ public class UserServiceImplTest {
         doNothing().when(userDao).saveUser(any(User.class));
 
         // Test the method
-        userService.addUser(name, email);
+        userService.addUser(name, email, AppConstants.NO_MEMBERSHIP);
 
         // Verify that userDao.saveUser() was called
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -98,12 +101,52 @@ public class UserServiceImplTest {
 
         try {
             // Test the method
-            userService.addUser(name, email);
+            userService.addUser(name, email, AppConstants.NO_MEMBERSHIP);
         } catch (RuntimeException e) {
             assertEquals("Database error", e.getMessage());
         }
 
         // Verify that saveUser() was attempted
         verify(userDao).saveUser(any(User.class));
+    }
+
+     // Test case: Calculate discount for VIP member, purchase over $100
+     @Test
+     public void testCalculateDiscount_VIP_Over100() {
+        User user = new User();
+
+        Long userId = 1L;
+
+        user.setId(userId);
+        user.setName("Alice");
+        user.setEmail("alice@gmail.com");
+        user.setMembershipStatus(AppConstants.VIP_MEMBERSHIP);
+        
+        double purchaseAmount = 150.0;
+ 
+        // Mock the DAO to return the user
+        when(userDao.getUserById(userId)).thenReturn(user);
+ 
+        // Call the service method
+        double discount = userService.calculationDiscount(userId, purchaseAmount);
+ 
+        // Assert the discount is 20%
+        assertEquals(AppConstants.VIP_DISCOUNT_OVER_100, discount);
+     }
+
+    // Test case: User not found
+    @Test 
+    public void testCalculateDiscount_UserNotFound() {
+        Long userId = 99L;
+        double purchaseAmount = 150.0;
+
+        // Mock the DAO to return null for non-existent user 
+        when(userDao.getUserById(userId)).thenReturn(null);
+
+        // Call the service method
+        Double discount = userService.calculationDiscount(userId, purchaseAmount);
+
+        // Assert that the discount is null (user not found)
+        assertNull(discount);
     }
 }

@@ -6,4 +6,5 @@ import java.util.List;
 public interface UserDao {
     void saveUser(User user);
     List<User> listUsers();
+    User getUserById(Long id);
 }
