@@ -1,7 +1,8 @@
 package com.example.controller;
 
-import com.example.dao.UserDao;
 import com.example.model.User;
+import com.example.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,19 +14,20 @@ import java.util.List;
 public class UserController {
     
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @GetMapping("/users")
     public List<User> listUsers() {
-        return userDao.listUsers();
+        return userService.getAllUsers();
     }
 
     @PostMapping("/addUser")
     public String saveUser(@RequestParam String name, @RequestParam String email) {
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        userDao.saveUser(user);
+        if (name == "" || email == "") {
+            return "Invalid name or email";
+        }
+
+        userService.addUser(name, email);
         return "User added successfully!";
     }
     
