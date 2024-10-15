@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public String postMethodName(@RequestParam String name, @RequestParam String email) {
+    public String saveUser(@RequestParam String name, @RequestParam String email) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
