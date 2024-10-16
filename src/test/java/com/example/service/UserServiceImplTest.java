@@ -113,9 +113,9 @@ public class UserServiceImplTest {
         verify(userRepo).saveUser(any(User.class));
     }
 
-     // Test case: Calculate discount for VIP member, purchase over $100
-     @Test
-     public void testCalculateDiscount_VIP_Over100() {
+    // Scenario 5: Calculate discount for VIP member, purchase over $100
+    @Test
+    public void testCalculateDiscount_VIP_Over100() {
         User user = new User();
 
         Long userId = 1L;
@@ -135,9 +135,9 @@ public class UserServiceImplTest {
  
         // Assert the discount is 20%
         assertEquals(AppConstants.VIP_DISCOUNT_OVER_100, discount);
-     }
+    }
 
-   // Test case: calculationDiscount throws UserNotFoundException if user not found
+    // Scenario 6: calculationDiscount throws UserNotFoundException if user not found
     @Test
     public void testCalculateDiscount_UserNotFound() {
         Long userId = 99L;

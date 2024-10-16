@@ -89,7 +89,7 @@ public class UserControllerTest {
         assertEquals("Invalid name or email", response);
     }
 
-    // Test case: Calculate discount for VIP member
+    // Scenario 5: Calculate discount for VIP member
     @Test
     public void testCalculateDiscount_VIP() {
         Long userId = 1L;
@@ -105,7 +105,7 @@ public class UserControllerTest {
         assertEquals("User gets a discount of 20.0% on a purchase of $150.0", response);
     }
 
-    // Test case: calculateDiscount should return 404 if user not found
+    // Scenario 6: calculateDiscount should return 404 if user not found
     @Test
     public void testCalculateDiscount_UserNotFound() {
         Long userId = 99L;
