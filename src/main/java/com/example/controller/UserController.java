@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -38,6 +37,11 @@ public class UserController {
         Double discount = userService.calculationDiscount(id, purchaseAmount);
         double discountPercentage = discount * 100;
         return "User gets a discount of " + discountPercentage + "% on a purchase of $" + purchaseAmount;
+    }
+    
+    @GetMapping("/todo")
+    public Map<String, Object> fetchTodo() {
+        return userService.fetchTodo();
     }
     
 }

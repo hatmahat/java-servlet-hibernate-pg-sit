@@ -83,7 +83,35 @@
 			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+
+	<!-- WireMock compatible with Jetty -->
+	<dependency>
+		<groupId>com.github.tomakehurst</groupId>
+		<artifactId>wiremock-jre8-standalone</artifactId>
+		<version>2.31.0</version>
+		<scope>test</scope>
+	</dependency>
+
+	<!-- Jetty HTTP and Servlet dependencies (WireMock will internally use these) -->
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-server</artifactId>
+		<version>11.0.7</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-util</artifactId>
+		<version>11.0.7</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-servlet</artifactId>
+		<version>11.0.7</version>
+		<scope>test</scope>
+	</dependency>
+ </dependencies>
 
 	<build>
 		<plugins>

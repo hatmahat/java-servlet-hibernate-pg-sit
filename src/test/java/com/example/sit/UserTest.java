@@ -3,13 +3,22 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.junit.jupiter.api.TestInstance;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserTest extends TestHelper {
+
+    @BeforeAll
+    public void setUpOnce() throws Exception {
+        super.setUpOnce();
+    }
 
     @BeforeEach
     @Override
@@ -25,7 +34,7 @@ public class UserTest extends TestHelper {
 
     // Test hitting the /users endpoint
     @Test
-    public void testListUsers() throws Exception {
+    public void listUsers() throws Exception { // listUsers_success_return_
         HttpGet request = new HttpGet(BASE_URL + "/users");
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -85,6 +94,36 @@ public class UserTest extends TestHelper {
         // Verify the response body
         String responseBody = new String(response.getEntity().getContent().readAllBytes());
         assertEquals("User with ID 999 not found", responseBody);
+    }
+
+    // Test hitting the /todo endpoint
+    @Test
+    public void testFetchTodo() throws Exception {
+        // Make the request to the /todo endpoint
+        HttpGet request = new HttpGet(BASE_URL + "/todo");
+
+        System.setProperty("external.api.url", "http://localhost:8089/todos/1");
+
+        CloseableHttpResponse response = httpClient.execute(request);
+
+        // Verify the response status
+        assertEquals(200, response.getCode());
+
+        // Parse the response body
+        String responseBody = new String(response.getEntity().getContent().readAllBytes());
+
+        // Expected response from WireMock stub
+        String expectedResponse = """
+        {
+            "userId": 1,
+            "id": 1,
+            "title": "delectus aut autem",
+            "completed": false
+        }
+        """;
+
+        // Assert the response body using JSONAssert for deep equality comparison
+        JSONAssert.assertEquals(expectedResponse, responseBody, false); // False means non-strict mode
     }
 }
 

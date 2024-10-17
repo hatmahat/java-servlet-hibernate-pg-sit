@@ -1,5 +1,7 @@
 package com.example.config;
 
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,6 +42,11 @@ public class AppConfig {
         HibernateTransactionManager txManager = new HibernateTransactionManager();
         txManager.setSessionFactory(sessionFactory);
         return txManager;
+    }
+
+    @Bean
+    public CloseableHttpClient closeableHttpClient() {
+        return HttpClients.createDefault();
     }
 
     private Properties hibernateProperties() {

@@ -6,10 +6,15 @@ import java.sql.Statement;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.junit.Rule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.example.java_spring_hibernate_pg_sit.JavaSpringHibernatePgSitApplication;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.jetty9.JettyHttpServerFactory;
 
 public class TestHelper {
 
@@ -17,6 +22,17 @@ public class TestHelper {
     private ConfigurableApplicationContext context;  // To store the running application context
     public CloseableHttpClient httpClient;
     public static final String BASE_URL = "http://localhost:8080";
+    private WireMockServer wireMockServer;
+
+    public void setUpOnce() throws Exception {
+        // Start WireMock server on port 8089
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089));
+        wireMockServer.start();
+        
+   
+        // Set up WireMock stubs for external API
+        setUpWireMockStubs();
+    }
 
     public void setUp() throws Exception {
         // Start the Spring Boot application 
@@ -48,6 +64,15 @@ public class TestHelper {
         if (httpClient != null) {
             httpClient.close();
         }
+    }
+
+    private void setUpWireMockStubs() {
+        WireMock.configureFor("localhost", 8089);
+        WireMock.stubFor(WireMock.get("/todos/1")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody("{ \"userId\": 2, \"id\": 1, \"title\": \"delectus aut autem\", \"completed\": false }")
+                        .withHeader("Content-Type", "application/json")));
     }
 
     private void seedDatabase() throws Exception {
