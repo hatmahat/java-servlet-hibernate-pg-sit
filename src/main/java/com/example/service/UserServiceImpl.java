@@ -21,8 +21,6 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-    //private static final String EXTERNAL_API_URL = "https://jsonplaceholder.typicode.com/todos/1";
-
     private final CloseableHttpClient httpClient; 
     private final UserRepo userRepo;
     private final String externalApiUrl;               
@@ -80,8 +78,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> fetchTodo() {
         try {
-            System.out.println("externalApiUrl");
-            System.out.println(externalApiUrl);
             HttpGet request = new HttpGet(externalApiUrl);
             CloseableHttpResponse response = httpClient.execute(request);  // Use injected httpClient
 

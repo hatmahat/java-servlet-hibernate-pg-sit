@@ -71,7 +71,7 @@ public class TestHelper {
         WireMock.stubFor(WireMock.get("/todos/1")
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
-                        .withBody("{ \"userId\": 2, \"id\": 1, \"title\": \"delectus aut autem\", \"completed\": false }")
+                        .withBody("{ \"userId\": 1, \"id\": 1, \"title\": \"delectus aut autem\", \"completed\": false }")
                         .withHeader("Content-Type", "application/json")));
     }
 

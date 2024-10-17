@@ -17,6 +17,7 @@ public class UserTest extends TestHelper {
 
     @BeforeAll
     public void setUpOnce() throws Exception {
+        System.setProperty("external.api.url", "http://localhost:8089/todos/1");
         super.setUpOnce();
     }
 
@@ -101,8 +102,6 @@ public class UserTest extends TestHelper {
     public void testFetchTodo() throws Exception {
         // Make the request to the /todo endpoint
         HttpGet request = new HttpGet(BASE_URL + "/todo");
-
-        System.setProperty("external.api.url", "http://localhost:8089/todos/1");
 
         CloseableHttpResponse response = httpClient.execute(request);
 
