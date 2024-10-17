@@ -33,9 +33,8 @@ public class UserTest extends TestHelper {
         super.tearDown();
     }
 
-    // Test hitting the /users endpoint
     @Test
-    public void listUsers() throws Exception { // listUsers_success_return_
+    public void listUsers_SuccessCase_ReturnUsersList() throws Exception { 
         HttpGet request = new HttpGet(BASE_URL + "/users");
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -55,9 +54,8 @@ public class UserTest extends TestHelper {
         JSONAssert.assertEquals(expectedResponse, responseBody, false); // false means strict mode off (ignores order and spaces)
     }
 
-    // Test adding a user with POST request
     @Test
-    public void testAddUser() throws Exception {
+    public void saveUser_SuccessCase_ReturnSuccessString() throws Exception {
         HttpPost request = new HttpPost(BASE_URL + "/addUser?name=Alice&email=alice@example.com&type=VIP");
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -69,9 +67,8 @@ public class UserTest extends TestHelper {
         assertEquals("User added successfully!", responseBody);
     }
 
-    // Test calculating discount for a user
     @Test
-    public void testCalculateDiscount() throws Exception {
+    public void calculateDiscount_SuccessCase_GetUserDiscount() throws Exception {
         HttpGet request = new HttpGet(BASE_URL + "/discount?id=1&purchaseAmount=150.0");
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -83,9 +80,8 @@ public class UserTest extends TestHelper {
         assertEquals("User gets a discount of 20.0% on a purchase of $150.0", responseBody);
     }
 
-    // Test handling of non-existent user
     @Test
-    public void testCalculateDiscount_UserNotFound() throws Exception {
+    public void calculateDiscount_FailedCase_UserNotFound() throws Exception {
         HttpGet request = new HttpGet(BASE_URL + "/discount?id=999&purchaseAmount=150.0");
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -97,9 +93,8 @@ public class UserTest extends TestHelper {
         assertEquals("User with ID 999 not found", responseBody);
     }
 
-    // Test hitting the /todo endpoint
     @Test
-    public void testFetchTodo() throws Exception {
+    public void fetchTodo_SuccessCase_ReturnTodoObject() throws Exception {
         // Make the request to the /todo endpoint
         HttpGet request = new HttpGet(BASE_URL + "/todo");
 

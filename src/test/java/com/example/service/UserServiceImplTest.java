@@ -47,9 +47,8 @@ public class UserServiceImplTest {
         userService = new UserServiceImpl(mockHttpClient, userRepo, externalApiUrl);
     }
 
-    // Scenario 1: Test getAllUsers() when the user list is non-empty
-    @Test
-    public void testGetAllUsers_withNonEmptyList() {
+    @Test 
+    public void getAllUsers_SuccessCase_ReturnUsersList() {
         List<User> mockUsers = new ArrayList<>();
         User user1 = new User();
         user1.setName("John Doe");
@@ -72,9 +71,8 @@ public class UserServiceImplTest {
         assertEquals("Jane Doe", result.get(1).getName());
     }
 
-    // Scenario 2: Test getAllUsers() when the user list is empty
     @Test
-    public void testGetAllUsers_withEmptyList() {
+    public void getAllUsers_SuccessCase_ReturnEmptyList() {
         List<User> mockUsers = new ArrayList<>();
 
         // Mocking the behavior of userRepo
@@ -85,9 +83,8 @@ public class UserServiceImplTest {
         assertEquals(0, result.size());
     }
 
-    // Scenario 3: Test addUser() with valid inputs
     @Test
-    public void testAddUser_withValidInputs() {
+    public void addUser_SuccessCase_ValidInputs() { 
         String name = "John Doe";
         String email = "john@example.com";
 
@@ -104,11 +101,11 @@ public class UserServiceImplTest {
 
         assertEquals("John Doe", capturedUser.getName());
         assertEquals("john@example.com", capturedUser.getEmail());
+        assertEquals("NONE", capturedUser.getMembershipStatus());
     }
 
-    // Scenario 4: Test addUser() when saveUser() throws an exception
     @Test
-    public void testAddUser_whenSaveUserThrowsException() {
+    public void addUser_FailedCase_DatabaseError() {
         String name = "John Doe";
         String email = "john@example.com";
 
@@ -126,9 +123,8 @@ public class UserServiceImplTest {
         verify(userRepo).saveUser(any(User.class));
     }
 
-    // Scenario 5: Calculate discount for VIP member, purchase over $100
     @Test
-    public void testCalculateDiscount_VIP_Over100() {
+    public void calculateDiscount_SuccessCase_ReturnVIPDiscount() {
         User user = new User();
 
         Long userId = 1L;
@@ -150,9 +146,8 @@ public class UserServiceImplTest {
         assertEquals(AppConstants.VIP_DISCOUNT_OVER_100, discount);
     }
 
-    // Scenario 6: calculationDiscount throws UserNotFoundException if user not found
     @Test
-    public void testCalculateDiscount_UserNotFound() {
+    public void calculateDiscount_FailedCase_UserNotFound() {
         Long userId = 99L;
         double purchaseAmount = 150.0;
 
@@ -168,9 +163,8 @@ public class UserServiceImplTest {
         assertEquals("User with ID 99 not found", exception.getMessage());
     }
 
-    // Test fetchTodo() method
     @Test
-    public void testFetchTodo_Success() throws Exception {
+    public void fetchTodo_SuccessCase_ReturnObject() throws Exception { 
         // Arrange
         String jsonResponse = "{ \"userId\": 1, \"id\": 1, \"title\": \"delectus aut autem\", \"completed\": false }";
 
@@ -189,9 +183,8 @@ public class UserServiceImplTest {
         assertEquals(false, result.get("completed"));
     }
 
-    // Test fetchTodo() when API returns an error
     @Test
-    public void testFetchTodo_APIError() throws Exception {
+    public void fetchTodo_FailedCase_FailedToFetch() throws Exception {
         // Arrange
         when(mockHttpClient.execute(any(HttpGet.class))).thenThrow(new RuntimeException("API Error"));
 

@@ -30,9 +30,8 @@ public class UserControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Scenario 1: Test GET /users with a non-empty list
     @Test
-    public void testListUsers_withNonEmptyList() {
+    public void listUsers_SuccessCase_ReturnUsersList() {
         List<User> mockUsers = new ArrayList<>();
         User user1 = new User();
         user1.setName("John Doe");
@@ -53,9 +52,8 @@ public class UserControllerTest {
         assertEquals("Jane Doe", result.get(1).getName());
     }
 
-    // Scenario 2: Test GET /users with an empty list
     @Test
-    public void testListUsers_withEmptyList() {
+    public void listUsers_FailedCase_ReturnEmptyList() {
         List<User> mockUsers = new ArrayList<>();
         when(userService.getAllUsers()).thenReturn(mockUsers);
 
@@ -63,9 +61,8 @@ public class UserControllerTest {
         assertEquals(0, result.size());
     }
 
-    // Scenario 3: Test POST /addUser with valid inputs
     @Test
-    public void testAddUser_withValidInputs() {
+    public void saveUser_SuccessCase_WithValidInput() {
         String name = "John Doe";
         String email = "john@example.com";
 
@@ -77,9 +74,8 @@ public class UserControllerTest {
         verify(userService).addUser(name, email, AppConstants.NO_MEMBERSHIP);
     }
 
-    // Scenario 4: Test POST /addUser with invalid inputs (e.g., empty name or email)
     @Test
-    public void testAddUser_withEmptyNameOrEmail() {
+    public void saveUser_FailedCase_InvalidNameOrEmail() { 
         String name = "";
         String email = "";
 
@@ -89,9 +85,8 @@ public class UserControllerTest {
         assertEquals("Invalid name or email", response);
     }
 
-    // Scenario 5: Calculate discount for VIP member
     @Test
-    public void testCalculateDiscount_VIP() {
+    public void calculateDiscount_SuccessCase_ReturnDiscountString() {
         Long userId = 1L;
         double purchaseAmount = 150.0;
 
@@ -105,9 +100,8 @@ public class UserControllerTest {
         assertEquals("User gets a discount of 20.0% on a purchase of $150.0", response);
     }
 
-    // Scenario 6: calculateDiscount should return 404 if user not found
     @Test
-    public void testCalculateDiscount_UserNotFound() {
+    public void calculateDiscount_FailedCase_UserNotFound() {
         Long userId = 99L;
         double purchaseAmount = 150.0;
 
