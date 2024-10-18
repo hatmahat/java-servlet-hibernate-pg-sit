@@ -43,7 +43,7 @@ public class UserServiceImplTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this); // Initializes and Injects Mocks
         userService = new UserServiceImpl(mockHttpClient, userRepo, externalApiUrl);
     }
 

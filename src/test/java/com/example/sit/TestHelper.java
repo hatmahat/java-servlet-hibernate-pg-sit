@@ -6,7 +6,6 @@ import java.sql.Statement;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.junit.Rule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -14,7 +13,6 @@ import com.example.java_spring_hibernate_pg_sit.JavaSpringHibernatePgSitApplicat
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.jetty9.JettyHttpServerFactory;
 
 public class TestHelper {
 
@@ -28,7 +26,6 @@ public class TestHelper {
         // Start WireMock server on port 8089
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089));
         wireMockServer.start();
-        
    
         // Set up WireMock stubs for external API
         setUpWireMockStubs();
