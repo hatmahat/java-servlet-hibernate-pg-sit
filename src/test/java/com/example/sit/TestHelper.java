@@ -36,7 +36,7 @@ public class TestHelper {
         context = SpringApplication.run(JavaSpringHibernatePgSitApplication.class);
 
         // Set up the database connection
-        connection = DriverManager.getConnection(
+        connection = DriverManager.getConnection( // make sure the database is for SIT only
                 "jdbc:postgresql://localhost:5333/java_sit", "myuser", "mypassword");
 
         // Set up HttpClient
