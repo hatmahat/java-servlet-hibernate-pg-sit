@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -22,6 +23,15 @@ public class TestHelper {
     public static final String BASE_URL = "http://localhost:8080";
     private WireMockServer wireMockServer;
 
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String username;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
     public void setUpOnce() throws Exception {
         // Start WireMock server on port 8089
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089));
@@ -36,8 +46,8 @@ public class TestHelper {
         context = SpringApplication.run(JavaSpringHibernatePgSitApplication.class);
 
         // Set up the database connection
-        connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5333/java_sit", "myuser", "mypassword");
+        connection = DriverManager.getConnection( // make sure the database is for SIT only
+                url, username, password);
 
         // Set up HttpClient
         httpClient = HttpClients.createDefault();
@@ -60,6 +70,9 @@ public class TestHelper {
         }
         if (httpClient != null) {
             httpClient.close();
+        }
+        if (wireMockServer != null && wireMockServer.isRunning()) {
+            wireMockServer.stop();
         }
     }
 

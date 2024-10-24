@@ -125,16 +125,14 @@ public class UserServiceImplTest {
 
     @Test
     public void calculateDiscount_SuccessCase_ReturnVIPDiscount() {
-        User user = new User();
-
         Long userId = 1L;
-
+        double purchaseAmount = 150.0;
+        
+        User user = new User();
         user.setId(userId);
         user.setName("Alice");
         user.setEmail("alice@gmail.com");
         user.setMembershipStatus(AppConstants.VIP_MEMBERSHIP);
-        
-        double purchaseAmount = 150.0;
  
         // Mock the repo to return the user
         when(userRepo.getUserById(userId)).thenReturn(user);
@@ -144,6 +142,27 @@ public class UserServiceImplTest {
  
         // Assert the discount is 20%
         assertEquals(AppConstants.VIP_DISCOUNT_OVER_100, discount);
+    }
+
+    @Test
+    public void calculateDiscount_SuccessCase_ReturnVIPDiscountUnder100() {
+        Long userId = 1L;
+        double purchaseAmount = 99.0;
+        
+        User user = new User();
+        user.setId(userId);
+        user.setName("Alice");
+        user.setEmail("alice@gmail.com");
+        user.setMembershipStatus(AppConstants.VIP_MEMBERSHIP);
+ 
+        // Mock the repo to return the user
+        when(userRepo.getUserById(userId)).thenReturn(user);
+ 
+        // Call the service method
+        double discount = userService.calculationDiscount(userId, purchaseAmount);
+ 
+        // Assert the discount is 20%
+        assertEquals(AppConstants.VIP_DISCOUNT_UNDER_100, discount);
     }
 
     @Test
